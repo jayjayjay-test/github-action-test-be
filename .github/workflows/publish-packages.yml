@@ -32,6 +32,7 @@ jobs:
           JWT_SECRET: thisIsTheJwtSecret
         run: |
           npm install -g wait-on
+          cp functionalAccounts.json.test functionalAccounts.json
           npm install
           npm run start
           wait-on http://localhost:3000/api/v3/health --timeout 200000
