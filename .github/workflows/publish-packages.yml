@@ -34,11 +34,9 @@ jobs:
           MONGODB_URI: "mongodb://localhost:27017/scicat"
           JWT_SECRET: thisIsTheJwtSecret
         run: |
+          npm install -g wait-on
           npm install
           npm run start
-      - name: Wait for Backend
-        run: |
-          npm install -g wait-on
           wait-on http://localhost:3000/api/v3/health --timeout 200000
 
       - name: Generate Client
