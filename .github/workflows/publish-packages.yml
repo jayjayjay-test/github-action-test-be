@@ -94,7 +94,7 @@ jobs:
           npm install
           npm run build
           cd dist && npm publish --access public
-        working-directory: ./sdk/typescript-angular
+        working-directory: ./sdk/typescript/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -124,12 +124,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel
-        working-directory: ./sdk/python
+        working-directory: ./sdk/python/
 
       - name: Build package
         run: |
           python setup.py sdist bdist_wheel
-        working-directory: ./sdk/python
+        working-directory: ./sdk/python/
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
