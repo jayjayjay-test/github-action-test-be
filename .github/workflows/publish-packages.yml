@@ -90,6 +90,7 @@ jobs:
           path: ./sdk/typescript/
 
       - run: |
+          ls -l
           ls -l sdk
       - name: Publish SDK to npm
         run: |
