@@ -72,7 +72,7 @@ jobs:
         uses: actions/cache@v4
         with:
           key: sdk-${{ github.sha }}
-          path: ./sdk
+          path: ./sdk/
 
   # npm-publish:
   #   runs-on: ubuntu-latest
