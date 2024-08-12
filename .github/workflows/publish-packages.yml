@@ -37,7 +37,6 @@ jobs:
           npm install -g wait-on
           npm install
           npm run start
-          wait-on http://localhost:3000/api/v3/health --timeout 200000
 
       - name: Generate Client
         uses: openapi-generators/openapitools-generator-action@v1
