@@ -9,7 +9,7 @@ env:
   NODE_VERSION: 18.x
 
 jobs:
-  setup-backend:
+  start-backend-and-upload-schema:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -37,14 +37,22 @@ jobs:
       - name: Download the Swagger schema
         run: curl -o ./swagger-schema.json http://localhost:3000/explorer-json
 
+      - name: Update SDK Version for each language in Config Files
+        run: node scripts/update-sdk-versions.js
+
       - uses: actions/upload-artifact@v4
         with:
           name: swagger-schema
           path: ./swagger-schema.json
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: updated-configs
+          path: .github/openapi/
+
   generate-sdk:
     runs-on: ubuntu-latest
-    needs: setup-backend
+    needs: start-backend-and-upload-schema
     strategy:
       matrix:
         generator: [python, typescript]
@@ -57,6 +65,10 @@ jobs:
         with:
           name: swagger-schema
           path: .
+      - uses: actions/download-artifact@v4
+        with:
+          name: updated-configs
+          path: .github/openapi/
 
       - name: Generate Client
         uses: openapi-generators/openapitools-generator-action@v1
