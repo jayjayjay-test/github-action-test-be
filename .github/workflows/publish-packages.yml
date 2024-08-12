@@ -107,10 +107,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: test1
-        run: |
-          ls -la
-          ls -la sdk
       - name: Restore cached generated SDK
         uses: actions/cache/restore@v4
         with:
