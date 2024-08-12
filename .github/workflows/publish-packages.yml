@@ -68,6 +68,11 @@ jobs:
           openapi-file: ./swagger-schema.json
           config-file: .github/openapi/${{ matrix.generator }}-config.json
 
+      - name: test 2
+        run: |
+          ls -la
+          ls -la sdk
+
       - name: Upload generated SDK JSON
         uses: actions/cache@v4
         with:
@@ -112,11 +117,6 @@ jobs:
         with:
           key: sdk-${{ github.sha }}
           path: ./sdk/
-
-      - name: test 2
-        run: |
-          ls -la
-          ls -la sdk
 
       - name: Set up Python
         uses: actions/setup-python@v4
