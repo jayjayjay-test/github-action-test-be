@@ -38,13 +38,13 @@ jobs:
           wait-on http://localhost:3000/api/v3/health --timeout 200000
 
       - name: Test OpenAPI URL accessibility
-        run: curl http://localhost:3000/explorer-json
+        run: curl -o ./swagger-schema.json http://localhost:3000/explorer-json
 
       - name: Generate Client
         uses: openapi-generators/openapitools-generator-action@v1
         with:
           generator: python
-          openapi-url: http://localhost:3000/explorer-json
+          openapi-file: ./swagger-schema.json
           config-file: .github/openapi/python-config.json
 
       - name: Upload generated SDK JSON
