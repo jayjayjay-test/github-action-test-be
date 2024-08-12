@@ -17,8 +17,8 @@ jobs:
           key: sdk-directory
           path: ./sdk
   setup-backend:
+    needs: base-cache
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
       - name: Cache Swagger schema
         uses: actions/cache@v4
         with:
-          key: swagger-schema-${{ github.sha }}
+          key: sdk-directory
           path: ./sdk/swagger-schema.json
 
   generate-sdk:
@@ -65,8 +65,8 @@ jobs:
       - name: Restore Cached Swagger schema
         uses: actions/cache/restore@v4
         with:
-          path: ./swagger-schema.json
-          key: swagger-schema-${{ github.sha }}
+          path: ./sdk/swagger-schema.json
+          key: sdk-directory
 
       - name: Generate Client
         uses: openapi-generators/openapitools-generator-action@v1
