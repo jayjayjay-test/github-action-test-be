@@ -2,6 +2,5 @@
   "generatorName": "python",
   "packageName": "Scicat-Python-SDK",
   "projectName": "Scicat-Python-SDK",
-  "packageVerion": "0.0.1",
-  "outputDir": "./sdk/python"
+  "packageVerion": "2.0.1"
 }
