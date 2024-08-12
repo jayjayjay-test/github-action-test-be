@@ -92,7 +92,7 @@ jobs:
       - run: |
           ls -l
           ls -l sdk
-          ls l ./sdk/typescript
+          ls -l ./sdk/typescript
       - name: Publish SDK to npm
         run: |
           npm install
