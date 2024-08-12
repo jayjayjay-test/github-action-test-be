@@ -9,6 +9,13 @@ env:
   NODE_VERSION: 18.x
 
 jobs:
+  base-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache@v3
+        with:
+          key: sdk-directory
+          path: ./sdk
   setup-backend:
     runs-on: ubuntu-latest
 
@@ -42,7 +49,7 @@ jobs:
         uses: actions/cache@v4
         with:
           key: swagger-schema-${{ github.sha }}
-          path: ./swagger-schema.json
+          path: ./sdk/swagger-schema.json
 
   generate-sdk:
     runs-on: ubuntu-latest
