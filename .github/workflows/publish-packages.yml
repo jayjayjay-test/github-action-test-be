@@ -43,7 +43,7 @@ jobs:
         run: sudo chown -R $USER:$USER ./sdk
 
       - name: Upload generated SDK JSON
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: sdk
           path: ./sdk
