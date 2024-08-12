@@ -87,7 +87,7 @@ jobs:
     needs: generate-sdk
     runs-on: ubuntu-latest
     environment:
-      name: npm
+      name: npm-sdk-package
       url: https://www.npmjs.com/package/@scicat-sdk/typescript-angular
     steps:
       - name: Checkout repository
@@ -117,7 +117,7 @@ jobs:
     needs: generate-sdk
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: pypi-sdk-package
       url: https://pypi.org/p/Scicat-Python-SDK
     permissions:
       id-token: write
@@ -129,8 +129,6 @@ jobs:
         with:
           name: sdk-python
           path: ./sdk
-      - run: |
-          ls -l sdk
 
       - name: Set up Python
         uses: actions/setup-python@v4
