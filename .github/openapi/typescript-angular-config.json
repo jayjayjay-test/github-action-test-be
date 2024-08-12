@@ -4,5 +4,5 @@
   "npmVersion": "0.0.7",
   "ngVersion": "16.2.12",
   "withInterfaces": true,
-  "outputDir": "/local/sdk/typescript"
+  "outputDir": "./sdk/typescript"
 }
