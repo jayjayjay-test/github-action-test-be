@@ -73,7 +73,7 @@ jobs:
         uses: actions/cache@v4
         with:
           key: sdk-${{ github.sha }}
-          path: ./sdk/
+          path: ./sdk/${{ matrix.generator }}
 
   npm-publish:
     needs: generate-sdk
@@ -87,6 +87,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: "https://registry.npmjs.org/"
+
+      - name: Restore cached generated SDK
+        uses: actions/cache/restore@v4
+        with:
+          key: sdk-${{ github.sha }}
+          path: ./sdk/
 
       - name: Publish SDK to npm
         run: |
