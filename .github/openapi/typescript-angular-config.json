@@ -3,5 +3,6 @@
   "npmName": "@scicat-sdk/typescript-angular",
   "npmVersion": "0.0.7",
   "ngVersion": "16.2.12",
-  "withInterfaces": true
+  "withInterfaces": true,
+  "outputDir": "/local/sdk/typescript"
 }
