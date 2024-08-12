@@ -97,7 +97,7 @@ jobs:
         run: |
           npm install
           npm run build
-          cd dist && npm publish --access public
+          npm publish dist --access public
         working-directory: ./sdk/typescript/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
