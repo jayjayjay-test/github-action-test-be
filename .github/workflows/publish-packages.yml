@@ -70,9 +70,6 @@ jobs:
         with:
           name: sdk-${{ matrix.generator }}
           path: ./sdk
-      - run: |
-          ls -la
-          ls -la sdk
 
   npm-publish:
     needs: generate-sdk

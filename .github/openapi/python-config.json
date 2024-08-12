@@ -1,6 +1,6 @@
 {
   "generatorName": "python",
-  "packageName": "Scicat-Python-SDK-2",
-  "projectName": "Scicat-Python-SDK-2",
-  "packageVerion": "2.0.1"
+  "packageName": "Scicat-Python-SDK",
+  "projectName": "Scicat-Python-SDK",
+  "packageVersion": "1.0.7"
 }
