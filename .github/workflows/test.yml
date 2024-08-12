@@ -1,0 +1,177 @@
+name: Test
+env:
+  NODE_VERSION: 18.x
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  install-and-cache:
+    name: Run install and cache
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache node_modules
+        id: cached-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}-${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        if: steps.cached-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+  eslint:
+    name: eslint
+    needs: [install-and-cache]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Cache node_modules
+        id: cached-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}-${{ env.NODE_VERSION }}
+
+      - name: run eslint
+        run: npm run lint
+
+  unit_tests:
+    name: Unit tests
+    needs: [install-and-cache]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore node_modules
+        id: cached-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}-${{ env.NODE_VERSION }}
+
+      - name: Unit tests
+        run: npm run test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [install-and-cache]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore node_modules
+        id: cached-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}-${{ env.NODE_VERSION }}
+
+      - name: Build
+        run: npm run build
+
+  api_tests:
+    name: API tests with ElasticSearch enabled - ${{ matrix.elasticsearch_enabled }}
+    needs: [install-and-cache]
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        elasticsearch_enabled: ["yes", "no"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Restore node_modules
+        id: cached-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}-${{ env.NODE_VERSION }}
+
+      - name: API tests
+        env:
+          ELASTICSEARCH_ENABLED: ${{ matrix.elasticsearch_enabled }}
+          MONGODB_URI: mongodb://localhost:27017/scicat-test-db
+          EXPRESS_SESSION_SECRET: a_scicat_secret
+          JWT_SECRET: a_scicat_secret
+          PORT: 3000
+          HTTP_MAX_REDIRECTS: 5
+          HTTP_TIMEOUT: 5000
+          JWT_EXPIRES_IN: 3600
+          LOGGING_DISABLED: True
+          # NOTE: The SITE variable is set to PSI because of the PublishedData test.
+          # Testing /register endpoint expects to have it as PSI for that specific scenario.
+          # Old backend was modifying this at runtime but with NestJS we need to investigate little bit more if there is a bit better and more elegant solution.
+          SITE: PSI
+          PID_PREFIX: "github_workflow_testing"
+          DOI_PREFIX: DOI.SAMPLE.PREFIX
+          METADATA_KEYS_RETURN_LIMIT: 100
+          METADATA_PARENT_INSTANCES_RETURN_LIMIT: 100
+          ADMIN_GROUPS: "admin,adminingestor"
+          DELETE_GROUPS: "archivemanager"
+          CREATE_DATASET_GROUPS: group1,group2,group3
+          CREATE_DATASET_WITH_PID_GROUPS: "group2"
+          CREATE_DATASET_PRIVILEGED_GROUPS: "datasetIngestor,group3"
+          ACCESS_GROUPS_STATIC_VALUES: "ess"
+          PROPOSAL_GROUPS: "proposalingestor"
+          SAMPLE_PRIVILEGED_GROUPS: "sampleingestor"
+          SAMPLE_GROUPS: "group1"
+          DATASET_CREATION_VALIDATION_ENABLED: true
+          DATASET_CREATION_VALIDATION_REGEX: "^github_workflow_testing/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$"
+          ES_HOST: https://localhost:9200
+          ES_USERNAME: elastic
+          ES_PASSWORD: duo-password
+          MONGODB_COLLECTION: Dataset
+          ES_MAX_RESULT: 210000
+          ES_FIELDS_LIMIT: 400000
+          ES_INDEX: "dataset"
+          ES_REFRESH: "wait_for"
+          STACK_VERSION: 8.8.2
+          CLUSTER_NAME: es-cluster
+          MEM_LIMIT: 4G
+
+        # Start mongo container and app before running api tests
+        run: |
+          cp CI/ESS/docker-compose.api.yaml docker-compose.yaml
+          cp functionalAccounts.json.test functionalAccounts.json
+          docker compose up --build -d
+          npm run test:api
