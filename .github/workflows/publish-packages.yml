@@ -3,7 +3,7 @@ name: Generate and Publish SDK for multiple languages
 on:
   push:
     branches:
-      - release
+      - main
 
 env:
   NODE_VERSION: 18.x
