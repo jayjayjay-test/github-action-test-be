@@ -11,6 +11,10 @@ env:
 jobs:
   generate-sdk:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        generator: [typescript-angular, python]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,6 +28,7 @@ jobs:
         run: |
           docker pull mongo:latest
           docker run -d --name mongo-container -p 27017:27017 mongo:latest
+
       - name: Start Backend
         env:
           MONGODB_URI: "mongodb://localhost:27017/scicat"
@@ -36,11 +41,13 @@ jobs:
           npm install -g wait-on
           wait-on http://localhost:3000/api/v3/health --timeout 200000
 
-      - name: Run SDK generation script
-        run: ./scripts/generate-sdk-local.sh
-
-      - name: Fix permissions for SDK directory
-        run: sudo chown -R $USER:$USER ./sdk
+      - name: Generate Client
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: ${{ matrix.generator }}
+          openapi-url: http://localhost:3000/explorer-json
+          config-file: .github/openapi/${{ matrix.generator }}-config.json
+          command-args: -o ./sdk/${{ matrix.generator }}/
 
       - name: Upload generated SDK JSON
         uses: actions/cache@v4
@@ -48,26 +55,26 @@ jobs:
           key: sdk
           path: ./sdk
 
-  npm-publish:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # npm-publish:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: "https://registry.npmjs.org/"
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         registry-url: "https://registry.npmjs.org/"
 
-      - name: Publish SDK to npm
-        run: |
-          npm install
-          npm run build
-          cd dist && npm publish --access public
-        working-directory: ./sdk/typescript
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #     - name: Publish SDK to npm
+  #       run: |
+  #         npm install
+  #         npm run build
+  #         cd dist && npm publish --access public
+  #       working-directory: ./sdk/typescript
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   pypi-publish:
     needs: generate-sdk
@@ -81,10 +88,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download generated SDK
-        uses: actions/download-artifact@v3
+      - name: Cache Primes
+        uses: actions/cache@v4
         with:
-          name: sdk
+          key: sdk
           path: ./sdk/
 
       - name: Set up Python
