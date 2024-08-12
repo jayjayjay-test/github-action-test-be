@@ -9,15 +9,7 @@ env:
   NODE_VERSION: 18.x
 
 jobs:
-  base-cache:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/cache@v3
-        with:
-          key: sdk-directory
-          path: ./sdk
   setup-backend:
-    needs: base-cache
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -45,11 +37,10 @@ jobs:
       - name: Download the Swagger schema
         run: curl -o ./swagger-schema.json http://localhost:3000/explorer-json
 
-      - name: Cache Swagger schema
-        uses: actions/cache@v4
+      - uses: actions/upload-artifact@v4
         with:
-          key: sdk-directory
-          path: ./sdk/swagger-schema.json
+          name: swagger-schema
+          path: ./swagger-schema.json
 
   generate-sdk:
     runs-on: ubuntu-latest
@@ -62,26 +53,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Restore Cached Swagger schema
-        uses: actions/cache/restore@v4
+      - uses: actions/download-artifact@v4
         with:
-          path: ./sdk/swagger-schema.json
-          key: sdk-directory
+          name: swagger-schema
+          path: ./swagger-schema.json
 
       - name: Generate Client
         uses: openapi-generators/openapitools-generator-action@v1
         with:
           generator: ${{ matrix.generator }}
-          openapi-file: ./sdk/swagger-schema.json
+          openapi-file: ./swagger-schema.json
           config-file: .github/openapi/${{ matrix.generator }}-config.json
           command-args: -o ./sdk/${{ matrix.generator }}
 
-      - name: Upload generated SDK JSON
-        uses: actions/cache@v4
+      - uses: actions/upload-artifact@v4
         with:
-          key: sdk-directory
+          name: sdk
           path: ./sdk/${{ matrix.generator }}
-
       - run: |
           ls -la
           ls -la sdk
@@ -99,10 +87,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: "https://registry.npmjs.org/"
 
-      - name: Restore cached generated SDK
-        uses: actions/cache/restore@v4
+      - uses: actions/download-artifact@v4
         with:
-          key: sdk-directory
+          name: sdk
           path: ./sdk/
 
       - name: Publish SDK to npm
@@ -126,10 +113,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Restore cached generated SDK
-        uses: actions/cache/restore@v4
+      - uses: actions/download-artifact@v4
         with:
-          key: sdk-directory
+          name: sdk
           path: ./sdk/
 
       - name: Set up Python
