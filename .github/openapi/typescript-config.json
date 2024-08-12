@@ -1,7 +1,7 @@
 {
   "generatorName": "typescript-angular",
   "npmName": "@scicat-sdk/typescript-angular",
-  "npmVersion": "1.0.9",
+  "npmVersion": "1.1.0",
   "ngVersion": "16.2.12",
   "withInterfaces": true
 }

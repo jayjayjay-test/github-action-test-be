@@ -89,15 +89,13 @@ jobs:
           name: sdk-typescript
           path: ./sdk
 
-      - name: build SDK package
+      - name: Publish SDK to npm
         run: |
           npm install
           npm run build
+          chmod -R 755 dist
+          npm publish dist --access public
         working-directory: ./sdk/typescript/
-
-      - name: Publish SDK to npm
-        run: npm publish --access public
-        working-directory: ./sdk/typescript/dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -117,6 +115,8 @@ jobs:
         with:
           name: sdk-python
           path: ./sdk
+      - run: |
+          ls -l sdk
 
       - name: Set up Python
         uses: actions/setup-python@v4
