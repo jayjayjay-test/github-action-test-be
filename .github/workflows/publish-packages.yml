@@ -68,7 +68,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: sdk
+          name: sdk-${{ matrix.generator }}
           path: ./sdk
       - run: |
           ls -la
