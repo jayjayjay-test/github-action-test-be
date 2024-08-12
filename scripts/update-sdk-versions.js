@@ -7,10 +7,6 @@ const configPaths = {
   python: ".github/openapi/python-config.json",
 };
 
-// Get the version from the root package.json
-const packageJson = readJsonFile("package.json");
-const packageVersion = packageJson.version;
-
 // Function to read and parse JSON files
 const readJsonFile = (filePath) => {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -20,6 +16,10 @@ const readJsonFile = (filePath) => {
 const writeJsonFile = (filePath, jsonObject) => {
   fs.writeFileSync(filePath, JSON.stringify(jsonObject, null, 2), "utf8");
 };
+
+// Get the version from the root package.json
+const packageJson = readJsonFile("package.json");
+const packageVersion = packageJson.version;
 
 for (const [key, configFilePath] of Object.entries(configPaths)) {
   const configJson = readJsonFile(configFilePath);
