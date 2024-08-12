@@ -89,12 +89,15 @@ jobs:
           name: sdk-typescript
           path: ./sdk
 
-      - name: Publish SDK to npm
+      - name: build SDK package
         run: |
           npm install
           npm run build
-          npm publish dist --access public
         working-directory: ./sdk/typescript/
+
+      - name: Publish SDK to npm
+        run: npm publish --access public
+        working-directory: ./sdk/typescript/dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
