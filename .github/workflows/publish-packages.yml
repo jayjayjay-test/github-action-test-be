@@ -75,6 +75,10 @@ jobs:
           key: sdk-${{ github.sha }}
           path: ./sdk/${{ matrix.generator }}
 
+      - run: |
+          ls -la
+          ls -la sdk
+
   npm-publish:
     needs: generate-sdk
     runs-on: ubuntu-latest
