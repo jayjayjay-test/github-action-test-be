@@ -107,7 +107,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: test
+      - name: test1
         run: |
           ls -la
           ls -la sdk
@@ -116,6 +116,11 @@ jobs:
         with:
           key: sdk-${{ github.sha }}
           path: ./sdk/
+
+      - name: test 2
+        run: |
+          ls -la
+          ls -la sdk
 
       - name: Set up Python
         uses: actions/setup-python@v4
