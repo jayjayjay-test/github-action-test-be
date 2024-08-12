@@ -89,6 +89,8 @@ jobs:
           name: sdk-typescript
           path: ./sdk/typescript/
 
+      - run: |
+          ls -l sdk
       - name: Publish SDK to npm
         run: |
           npm install
@@ -114,6 +116,8 @@ jobs:
         with:
           name: sdk-python
           path: ./sdk/python/
+      - run: |
+          ls -l sdk
 
       - name: Set up Python
         uses: actions/setup-python@v4
