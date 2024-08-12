@@ -86,6 +86,9 @@ jobs:
   npm-publish:
     needs: generate-sdk
     runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@scicat-sdk/typescript-angular
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
