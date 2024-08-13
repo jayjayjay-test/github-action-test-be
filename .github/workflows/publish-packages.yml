@@ -26,7 +26,7 @@ jobs:
     needs: get-package-version
     runs-on: ubuntu-latest
     steps:
-      - run: packageVersion=${{ needs.get-package-version.outputs.current-version}}
+      - run: echo "packageVersion=${{ needs.get-package-version.outputs.current-version }}" >> $GITHUB_ENV
 
       - run: echo " $packageVersion "
   # start-backend-and-upload-swagger-schema:
