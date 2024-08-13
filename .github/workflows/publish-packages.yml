@@ -95,9 +95,9 @@ jobs:
           config-file: .github/openapi/${{ matrix.generator }}-config.json
           command-args: |
             -o ./sdk/${{ matrix.generator }} $(
-            if [ "${{ matrix.generator }}" = "typescript" ]; then
+            if [ "${{ matrix.generator }}" == "typescript" ]; then
               echo "--additional-properties=npmVersion=$packageVersion";
-            elif [ "${{ matrix.generator }}" = "python" ]; then
+            elif [ "${{ matrix.generator }}" == "python" ]; then
               echo "--additional-properties=packageVersion=$packageVersion";
             fi
             )
