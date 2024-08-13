@@ -94,7 +94,7 @@ jobs:
           openapi-file: ./swagger-schema.json
           config-file: .github/openapi/${{ matrix.generator }}-config.json
           command-args: |
-            -o ./sdk/${{ matrix.generator }}
+            -o ./sdk/${{ matrix.generator }} \
             ${{ matrix.generator == 'typescript' && '--additional-properties=npmVersion=$packageVersion' }}
             ${{ matrix.generator == 'python' && '--additional-properties=packageVersion=$packageVersion' }}
 
