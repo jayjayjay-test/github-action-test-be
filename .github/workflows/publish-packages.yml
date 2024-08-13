@@ -95,8 +95,8 @@ jobs:
           config-file: .github/openapi/${{ matrix.generator }}-config.json
           command-args: |
             -o ./sdk/${{ matrix.generator }} \
-            ${{ matrix.generator == 'typescript' && '--additional-properties=npmVersion=$packageVersion' }}
-            ${{ matrix.generator == 'python' && '--additional-properties=packageVersion=$packageVersion' }}
+            ${{ matrix.generator == 'typescript' && '--additional-properties=npmVersion=$packageVersion' || '' }}
+            ${{ matrix.generator == 'python' && '--additional-properties=packageVersion=$packageVersion' || '' }}
 
       - uses: actions/upload-artifact@v4
         with:
