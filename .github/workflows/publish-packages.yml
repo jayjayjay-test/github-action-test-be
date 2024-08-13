@@ -94,9 +94,13 @@ jobs:
           openapi-file: ./swagger-schema.json
           config-file: .github/openapi/${{ matrix.generator }}-config.json
           command-args: |
-            -o ./sdk/${{ matrix.generator }} 
-            ${{ matrix.generator == 'typescript' && '--additional-properties=npmVersion=$packageVersion' || '' }}
-            ${{ matrix.generator == 'python' && '--additional-properties=packageVersion=$packageVersion' || '' }}
+            -o ./sdk/${{ matrix.generator }} $(
+            if [ "${{ matrix.generator }}" = "typescript" ]; then
+              echo "--additional-properties=npmVersion=$packageVersion";
+            elif [ "${{ matrix.generator }}" = "python" ]; then
+              echo "--additional-properties=packageVersion=$packageVersion";
+            fi
+          )
 
       - uses: actions/upload-artifact@v4
         with:
