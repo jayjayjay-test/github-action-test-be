@@ -21,6 +21,10 @@ jobs:
         with:
           node-version: ${{env.NODE_VERSION}}
 
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
       - name: Pull MongoDB Image
         run: |
           docker pull mongo:latest
@@ -61,94 +65,96 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: swagger-schema
-          path: .
-      - uses: actions/download-artifact@v4
-        with:
-          name: updated-configs
-          path: .github/openapi/
+      - run : echo ${{ needs.start-backend-and-upload-swagger-schema.steps.package-version.outputs.current-version }}
 
-      - name: Generate Client
-        uses: openapi-generators/openapitools-generator-action@v1
-        with:
-          generator: ${{ matrix.generator }}
-          openapi-file: ./swagger-schema.json
-          config-file: .github/openapi/${{ matrix.generator }}-config.json
-          command-args: -o ./sdk/${{ matrix.generator }}
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     name: swagger-schema
+      #     path: .
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     name: updated-configs
+      #     path: .github/openapi/
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: sdk-${{ matrix.generator }}
-          path: ./sdk
+      # - name: Generate Client
+      #   uses: openapi-generators/openapitools-generator-action@v1
+      #   with:
+      #     generator: ${{ matrix.generator }}
+      #     openapi-file: ./swagger-schema.json
+      #     config-file: .github/openapi/${{ matrix.generator }}-config.json
+      #     command-args: -o ./sdk/${{ matrix.generator }}
 
-  npm-publish:
-    needs: generate-and-upload-sdk
-    runs-on: ubuntu-latest
-    environment:
-      name: npm-sdk-package
-      url: https://www.npmjs.com/package/@scicat-sdk/typescript-angular
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: sdk-${{ matrix.generator }}
+      #     path: ./sdk
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # npm-publish:
+  #   needs: generate-and-upload-sdk
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: npm-sdk-package
+  #     url: https://www.npmjs.com/package/@scicat-sdk/typescript-angular
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: "https://registry.npmjs.org/"
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: sdk-typescript
-          path: ./sdk
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         registry-url: "https://registry.npmjs.org/"
 
-      - name: Publish package
-        run: |
-          npm install
-          npm run build
-          npm publish --access public
-        working-directory: ./sdk/typescript/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: sdk-typescript
+  #         path: ./sdk
 
-  pypi-publish:
-    needs: generate-and-upload-sdk
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi-sdk-package
-      url: https://pypi.org/p/Scicat-Python-SDK
-    permissions:
-      id-token: write
+  #     - name: Publish package
+  #       run: |
+  #         npm install
+  #         npm run build
+  #         npm publish --access public
+  #       working-directory: ./sdk/typescript/
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # pypi-publish:
+  #   needs: generate-and-upload-sdk
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: pypi-sdk-package
+  #     url: https://pypi.org/p/Scicat-Python-SDK
+  #   permissions:
+  #     id-token: write
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: sdk-python
-          path: ./sdk
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel
-        working-directory: ./sdk/python/
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: sdk-python
+  #         path: ./sdk
 
-      - name: Build package
-        run: |
-          python setup.py sdist bdist_wheel
-        working-directory: ./sdk/python/
+  #     - name: Install dependencies
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install setuptools wheel
+  #       working-directory: ./sdk/python/
 
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: ./sdk/python/dist/
+  #     - name: Build package
+  #       run: |
+  #         python setup.py sdist bdist_wheel
+  #       working-directory: ./sdk/python/
+
+  #     - name: Publish package
+  #       uses: pypa/gh-action-pypi-publish@release/v1
+  #       with:
+  #         packages-dir: ./sdk/python/dist/
