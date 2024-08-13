@@ -24,6 +24,9 @@ jobs:
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
+    
+      - name: Capture the NPM version
+        run: echo "version=${{ steps.package-version.outputs.current-version }}" >> $GITHUB_ENV
 
       - name: Pull MongoDB Image
         run: |
@@ -65,7 +68,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - run : echo ${{ needs.start-backend-and-upload-swagger-schema.steps.package-version.outputs.current-version }}
+      - run : echo ${{ env.version }}
 
       # - uses: actions/download-artifact@v4
       #   with:
