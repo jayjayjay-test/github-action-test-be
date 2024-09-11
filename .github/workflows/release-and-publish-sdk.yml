@@ -5,6 +5,10 @@ on:
     branches:
       - release
 
+permissions:
+  contents: write
+  packages: write
+  
 env:
   NODE_VERSION: 20.x
   PYTHON_VERSION: 3.x
