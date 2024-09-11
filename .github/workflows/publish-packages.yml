@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      new_tag: ${{ steps.without_v.outputs.stripped_tag }}
+      new_tag: ${{ steps.without_v.outputs.tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
         run: |
           TAG=${{ steps.tag_version.outputs.new_tag }}
           WITHOUT_V=${TAG#v}
-          echo "::set-output name=stripped_tag::$STRIPPED_TAG"
+          echo "::set-output name=tag::$WITHOUT_V"
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
