@@ -149,7 +149,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: sdk-${{ matrix.generator }}
+          name: sdk-${{ matrix.generator }}-${{ github.sha }}
           path: ./sdk
 
   npm-publish:
@@ -171,7 +171,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: sdk-typescript
+          name: sdk-typescript-${{github.sha}}
           path: ./sdk
 
       - name: Publish package
@@ -203,7 +203,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: sdk-python
+          name: sdk-python-${{github.sha}}
           path: ./sdk
 
       - name: Install dependencies
