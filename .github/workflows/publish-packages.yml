@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+      new_tag: ${{ steps.without_v.outputs.stripped_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
@@ -29,16 +29,23 @@ jobs:
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
         with:
-          tag_prefix: ''
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: ${{ env.RELEASE_BRANCH }}
+
+      - name: Strip 'v' from the tag
+        id: without_v
+        run: |
+          TAG=${{ steps.tag_version.outputs.new_tag }}
+          WITHOUT_V=${TAG#v}
+          echo "::set-output name=stripped_tag::$STRIPPED_TAG"
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ steps.tag_version.outputs.new_tag }}
-          name: Release v${{ steps.tag_version.outputs.new_tag }}
-          body: v${{ steps.tag_version.outputs.changelog }}
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+        
 
       ## The setup-qemu-action simplifies the setup of QEMU for cross-platform builds
       ## https://github.com/docker/setup-qemu-action
