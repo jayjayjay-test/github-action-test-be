@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      new_tag: ${{ steps.without_v.outputs.tag }}
+      new_tag: ${{ steps.without_v.outputs.without_v_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
         run: |
           TAG=${{ steps.tag_version.outputs.new_tag }}
           WITHOUT_V=${TAG#v}
-          echo "tag=$WITHOUT_V" >> $GITHUB_ENV
+          echo "without_v_tag=$WITHOUT_V" >> $GITHUB_ENV
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
