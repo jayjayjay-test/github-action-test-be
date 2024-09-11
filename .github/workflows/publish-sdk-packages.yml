@@ -60,13 +60,6 @@ jobs:
           name: swagger-schema
           path: .
 
-      - name: Check packageVersion
-        run: |
-          if [ -z "$packageVersion" ]; then
-            echo "packageVersion is not set, exiting..."
-            exit 1
-          fi
-
       - name: Generate Client
         uses: openapi-generators/openapitools-generator-action@v1
         with:
