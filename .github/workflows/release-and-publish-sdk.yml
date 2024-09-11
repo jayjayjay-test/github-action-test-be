@@ -1,4 +1,4 @@
-name: Bump release version and build-push
+name: Bump release version, build-push image and publish SDK
 
 on:
   push:
@@ -116,7 +116,9 @@ jobs:
 
   generate-and-upload-sdk:
     runs-on: ubuntu-latest
-    needs: build
+    needs: 
+      - build
+      - start-backend-and-upload-swagger-schema 
     strategy:
       matrix:
         generator: [python, typescript]
