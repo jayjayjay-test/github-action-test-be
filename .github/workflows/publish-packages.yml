@@ -54,35 +54,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install Node.js dependencies
-        run: npm ci
-
-      ## The metadata-action dynamically generates and manages metadata for Docker images,
-      ## like tags and labels, based on the provided inputs and workflow context.
-      ## https://github.com/docker/metadata-action
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/scicatproject/backend-next
-          tags: |
-            type=raw,value=stable
-            type=raw,value=${{ steps.tag_version.outputs.new_tag }}
-            type=semver,pattern={{version}}
-            type=raw,value={{date 'YYYY_MM'}},prefix=r_
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64/v8
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
 
   start-backend-and-upload-swagger-schema:
     runs-on: ubuntu-latest
