@@ -1,7 +1,7 @@
 {
   "generatorName": "typescript-angular",
   "npmName": "@scicatproject/test-package",
-  "npmRepository":"https://github.com/SciCatProject/scicat-backend-next",
+  "npmRepository":"https://github.com/Junjiequan/github-action-test-be",
   "ngVersion": "16.2.12",
   "withInterfaces": true
 }
