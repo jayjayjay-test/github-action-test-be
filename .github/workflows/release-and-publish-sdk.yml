@@ -187,7 +187,7 @@ jobs:
           npm publish --access public
         working-directory: ./sdk/typescript/
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   pypi-publish:
     needs: generate-and-upload-sdk
