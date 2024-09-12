@@ -1,6 +1,6 @@
 {
   "generatorName": "typescript-angular",
-  "npmName": "@scicatproject/test-new-sdk",
+  "npmName": "test-new-sdk",
   "npmRepository":"https://github.com/Junjiequan/github-action-test-be.git",
   "ngVersion": "16.2.12",
   "withInterfaces": true
