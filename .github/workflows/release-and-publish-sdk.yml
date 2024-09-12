@@ -214,7 +214,7 @@ jobs:
       - name: Download Python SDK Artifact
         uses: actions/download-artifact@v4
         with:
-          name: sdk-python-${{github.sha}}
+          name: sdk-${{ matrix.sdk_type }}-${{github.sha}}
           path: ./sdk
 
       - name: Install dependencies
