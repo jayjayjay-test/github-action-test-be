@@ -142,9 +142,11 @@ jobs:
           openapi-file: ./swagger-schema.json
           config-file: .github/openapi/${{ matrix.generator }}-config.json
           command-args: |
+            --git-repo-id github-action-test-be \
+            --git-user-id Junjiequan \
             -o ./sdk/${{ matrix.generator }} $(
             if [ "${{ matrix.generator }}" == "typescript" ]; then
-              echo "--additional-properties=npmVersion=${{ needs.build.outputs.new_tag}},gitRepoId=github-action-test-be,gitUserId=Junjiequan";
+              echo "--additional-properties=npmVersion=${{ needs.build.outputs.new_tag}}";
             elif [ "${{ matrix.generator }}" == "python" ]; then
               echo "--additional-properties=packageVersion=${{ needs.build.outputs.new_tag}}";
             elif [ "${{ matrix.generator }}" == "python-pydantic-v1" ]; then
