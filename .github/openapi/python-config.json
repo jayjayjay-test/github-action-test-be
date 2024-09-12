@@ -1,6 +1,7 @@
 {
   "generatorName": "python",
   "packageName": "Scicat-Python-SDK",
+  "packageUrl":"https://github.com/SciCatProject/scicat-backend-next",
   "projectName": "Scicat-Python-SDK",
-  "helpTxt":"This is a Python SDK for the Scicat API. It is generated using OpenAPI Generator"
+  "description": "A Python SDK for interacting with the Scicat API, generated using OpenAPI Generator. Provides full API client capabilities and supports various API endpoints."
 }

@@ -190,7 +190,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  pypi-publish-python:
+  pypi-publish:
     needs: generate-and-upload-sdk
     runs-on: ubuntu-latest
     strategy:
@@ -198,7 +198,7 @@ jobs:
         sdk_type: [python, python-pydantic-v1]  
     environment:
       name: ${{ matrix.sdk_type }}-sdk-package
-      url: ${{ matrix.sdk_type == 'python' && 'https://pypi.org/p/Scicat-Python-SDK' || 'https://pypi.org/project/Another-Package' }}
+      url: ${{ matrix.sdk_type == 'python' && 'https://pypi.org/project/Scicat-Python-SDK/' || 'https://pypi.org/project/Scicat-Pydantic-SDK/' }}
     permissions:
       id-token: write
 
