@@ -1,5 +1,6 @@
 {
   "generatorName": "python",
   "packageName": "Scicat-Python-SDK",
-  "projectName": "Scicat-Python-SDK"
+  "projectName": "Scicat-Python-SDK",
+  "helpTxt":"This is a Python SDK for the Scicat API. It is generated using OpenAPI Generator"
 }

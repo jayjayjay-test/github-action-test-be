@@ -125,7 +125,7 @@ jobs:
       - start-backend-and-upload-swagger-schema 
     strategy:
       matrix:
-        generator: [python, typescript]
+        generator: [python, python-pydantic-v1, typescript]
 
     steps:
       - name: Checkout repository
@@ -147,6 +147,8 @@ jobs:
             if [ "${{ matrix.generator }}" == "typescript" ]; then
               echo "--additional-properties=npmVersion=${{ needs.build.outputs.new_tag}}";
             elif [ "${{ matrix.generator }}" == "python" ]; then
+              echo "--additional-properties=packageVersion=${{ needs.build.outputs.new_tag}}";
+            elif [ "${{ matrix.generator }}" == "python-pydantic-v1" ]; then
               echo "--additional-properties=packageVersion=${{ needs.build.outputs.new_tag}}";
             fi
             )
@@ -173,7 +175,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: "https://registry.npmjs.org/"
 
-      - uses: actions/download-artifact@v4
+      - name: Download TypeScript SDK Artifact
+        uses: actions/download-artifact@v4
         with:
           name: sdk-typescript-${{github.sha}}
           path: ./sdk
@@ -187,9 +190,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  pypi-publish:
+  pypi-publish-python:
     needs: generate-and-upload-sdk
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk_type: [python, python-pydantic-v1]  
     environment:
       name: pypi-sdk-package
       url: https://pypi.org/p/Scicat-Python-SDK
@@ -205,7 +211,8 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - uses: actions/download-artifact@v4
+      - name: Download Python SDK Artifact
+        uses: actions/download-artifact@v4
         with:
           name: sdk-python-${{github.sha}}
           path: ./sdk
@@ -214,14 +221,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel
-        working-directory: ./sdk/python/
+        working-directory: ./sdk/${{ matrix.sdk_type }}/
 
       - name: Build package
         run: |
           python setup.py sdist bdist_wheel
-        working-directory: ./sdk/python/
+        working-directory: ./sdk/${{ matrix.sdk_type }}/
 
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: ./sdk/python/dist/
+          packages-dir: ./sdk/${{ matrix.sdk_type }}/dist/

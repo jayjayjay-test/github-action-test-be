@@ -1,0 +1,6 @@
+{
+  "generatorName": "python-pydantic-v1",
+  "packageName": "Scicat-pydantic-SDK",
+  "projectName": "Scicat-pydantic-SDK",
+  "helpTxt":"This is a pydantic SDK for the Scicat API. It is generated using OpenAPI Generator"
+}
