@@ -72,7 +72,7 @@ jobs:
         run: npm ci
 
       ## The metadata-action dynamically generates and manages metadata for Docker images,
-      ## like tags and labels, based on the provided inputs and workflow context.
+      ## like tags and labels, based on the provided inputs and workflow context
       ## https://github.com/docker/metadata-action
       - name: Docker meta
         id: meta
