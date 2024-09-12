@@ -163,7 +163,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: npm-sdk-package
-      url: https://www.npmjs.com/package/@scicat-sdk/typescript-angular
+      url: https://www.npmjs.com/package/@scicatproject/test-package
 
     steps:
       - name: Checkout repository
