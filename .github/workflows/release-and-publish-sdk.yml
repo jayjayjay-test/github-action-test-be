@@ -48,7 +48,7 @@ jobs:
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
 
-      ## The setup-qemu-action simplifies the setup of QEMU for cross-platform builds.
+      ## The setup-qemu-action simplifies the setup of QEMU for cross-platform builds
       ## https://github.com/docker/setup-qemu-action
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -197,8 +197,8 @@ jobs:
       matrix:
         sdk_type: [python, python-pydantic-v1]  
     environment:
-      name: pypi-sdk-package
-      url: https://pypi.org/p/Scicat-Python-SDK
+      name: ${{ matrix.sdk_type }}-sdk-package
+      url: ${{ matrix.sdk_type == 'python' && 'https://pypi.org/p/Scicat-Python-SDK' || 'https://pypi.org/project/Another-Package' }}
     permissions:
       id-token: write
 
