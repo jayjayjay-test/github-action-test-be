@@ -5,9 +5,9 @@ on:
     branches:
       - release
 
-# permissions:
-#   contents: write
-#   packages: write
+permissions:
+  contents: write
+  packages: write
   
 env:
   NODE_VERSION: 20.x
