@@ -11,7 +11,7 @@ env:
   RELEASE_BRANCH: release
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -85,7 +85,7 @@ jobs:
             type=raw,value={{date 'YYYY_MM'}},prefix=r_
 
 
-  start-backend-and-upload-swagger-schema:
+  start-backend-export-swagger:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -96,7 +96,7 @@ jobs:
         with:
           node-version: ${{env.NODE_VERSION}}
 
-      - name: Pull MongoDB Image
+      - name: Pull and Run MongoDB
         run: |
           docker pull mongo:latest
           docker run -d --name mongo-container -p 27017:27017 mongo:latest
@@ -117,11 +117,11 @@ jobs:
           name: swagger-schema
           path: ./swagger-schema.json
 
-  generate-and-upload-sdk:
+  generate-upload-sdk:
     runs-on: ubuntu-latest
     needs: 
-      - build
-      - start-backend-and-upload-swagger-schema 
+      - build-release
+      - start-backend-export-swagger
     strategy:
       matrix:
         generator: [python, python-pydantic-v1, typescript]
@@ -146,11 +146,11 @@ jobs:
             --git-user-id Junjiequan \
             -o ./sdk/${{ matrix.generator }} $(
             if [ "${{ matrix.generator }}" == "typescript" ]; then
-              echo "--additional-properties=npmVersion=${{ needs.build.outputs.new_tag}}";
+              echo "--additional-properties=npmVersion=${{ needs.build-release.outputs.new_tag}}";
             elif [ "${{ matrix.generator }}" == "python" ]; then
-              echo "--additional-properties=packageVersion=${{ needs.build.outputs.new_tag}}";
+              echo "--additional-properties=packageVersion=${{ needs.build-release.outputs.new_tag}}";
             elif [ "${{ matrix.generator }}" == "python-pydantic-v1" ]; then
-              echo "--additional-properties=packageVersion=${{ needs.build.outputs.new_tag}}";
+              echo "--additional-properties=packageVersion=${{ needs.build-release.outputs.new_tag}}";
             fi
             )
 
@@ -160,7 +160,7 @@ jobs:
           path: ./sdk
 
   npm-publish:
-    needs: generate-and-upload-sdk
+    needs: generate-upload-sdk
     runs-on: ubuntu-latest
     environment:
       name: npm-sdk-package
@@ -192,7 +192,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   pypi-publish:
-    needs: generate-and-upload-sdk
+    needs: generate-upload-sdk
     runs-on: ubuntu-latest
     strategy:
       matrix:
