@@ -5,11 +5,6 @@
   "author": "",
   "private": true,
   "license": "BSD-3-Clause",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Junjiequan/github-action-test-be.git"
-  },
-  "homepage": "https://github.com/Junjiequan/github-action-test-be",
   "type": "commonjs",
   "scripts": {
     "prebuild": "rimraf dist",
