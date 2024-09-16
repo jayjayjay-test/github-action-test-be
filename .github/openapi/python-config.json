@@ -1,7 +1,6 @@
 {
   "generatorName": "python",
   "packageName": "Scicat-Python-SDK",
-  "packageUrl":"https://github.com/SciCatProject/scicat-backend-next",
-  "projectName": "Scicat-Python-SDK",
-  "appDescription":"test-test-test-test"
+  "packageUrl": "https://github.com/SciCatProject/scicat-backend-next",
+  "projectName": "Scicat-Python-SDK"
 }

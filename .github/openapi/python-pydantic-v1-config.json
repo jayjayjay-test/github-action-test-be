@@ -1,7 +1,6 @@
 {
   "generatorName": "python-pydantic-v1",
   "packageName": "Scicat-pydantic-SDK",
-  "packageUrl":"https://github.com/SciCatProject/scicat-backend-next",
-  "projectName": "Scicat-pydantic-SDK",
-  "appDescription":"test-test-test-test"
+  "packageUrl": "https://github.com/SciCatProject/scicat-backend-next",
+  "projectName": "Scicat-pydantic-SDK"
 }
