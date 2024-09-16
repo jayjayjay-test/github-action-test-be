@@ -26,9 +26,7 @@ async function bootstrap() {
   app.setGlobalPrefix("api/v3");
   const config = new DocumentBuilder()
     .setTitle("SciCat backend API")
-    .setDescription(
-      "This is the API for the SciCat Backend ============================================",
-    )
+    .setDescription("This is the API for the SciCat Backend =")
     .setVersion("" + process.env.npm_package_version)
     .addBearerAuth()
     .build();
