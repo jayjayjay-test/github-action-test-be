@@ -566,7 +566,7 @@ export class SamplesController {
       "Returns a boolean indicating whether the user has access to the sample with the specified ID.",
   })
   @ApiParam({
-    name: "pid",
+    name: "id",
     description: "ID of the sample to check access for",
     type: String,
   })
