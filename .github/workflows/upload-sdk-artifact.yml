@@ -48,7 +48,7 @@ jobs:
       - start-backend-and-upload-swagger-schema
     strategy:
       matrix:
-        generator: [python, typescript, python-pydantic-v1]
+        generator: [python, typescript-angular, python-pydantic-v1]
 
     steps:
       - name: Checkout repository
