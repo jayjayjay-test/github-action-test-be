@@ -1,6 +1,6 @@
 # SciCat Backend
 
-[![SDK artifacts](https://github.com/Junjiequan/github-action-test-be/actions/workflows/upload-sdk-artifact.yml/badge.svg)](https://github.com/Junjiequan/github-action-test-be/actions/workflows/upload-sdk-artifact.yml)
+[![SDK artifacts](https://github.com/Junjiequan/github-action-test-be/actions/workflows/upload-sdk-artifact.yml/badge.svg)](https://github.com/Junjiequan/github-action-test-be/actions/workflows/upload-sdk-artifact.yml?query=branch:master)
 
 ## Version: v4.x
 
