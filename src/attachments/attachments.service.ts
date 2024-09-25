@@ -24,23 +24,3 @@ export class AttachmentsService {
     return createdAttachment.save();
   }
 
-  async findOneAndUpdate(
-    filter: FilterQuery<AttachmentDocument>,
-    updateAttachmentDto: PartialUpdateAttachmentDto,
-  ): Promise<Attachment | null> {
-    const username = (this.request?.user as JWTUser).username;
-    return this.attachmentModel
-      .findOneAndUpdate(
-        filter,
-        addUpdatedByField(updateAttachmentDto, username),
-        { new: true },
-      )
-      .exec();
-  }
-
-  async findOneAndDelete(
-    filter: FilterQuery<AttachmentDocument>,
-  ): Promise<unknown> {
-    return this.attachmentModel.findOneAndDelete(filter).exec();
-  }
-}
