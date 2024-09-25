@@ -14,16 +14,6 @@ export class InitialDatasetsService {
     private initialDatasetModel: Model<InitialDatasetDocument>,
   ) {}
 
-  async create(
-    createInitialDatasetDto: CreateInitialDatasetDto,
-  ): Promise<InitialDataset> {
-    const createdInitialDataset = new this.initialDatasetModel(
-      createInitialDatasetDto,
-    );
-    return createdInitialDataset.save();
-  }
 
-  async findById(id: string): Promise<InitialDataset | null> {
-    return this.initialDatasetModel.findById(id);
   }
 }
