@@ -24,19 +24,6 @@ export class AttachmentsService {
     return createdAttachment.save();
   }
 
-  async findAll(
-    filter: FilterQuery<AttachmentDocument>,
-  ): Promise<Attachment[]> {
-    return this.attachmentModel.find(filter).exec();
-  }
-
-  async findOne(
-    filter: FilterQuery<AttachmentDocument>,
-    projection?: Record<string, unknown>,
-  ): Promise<Attachment | null> {
-    return this.attachmentModel.findOne(filter, projection ?? {}).exec();
-  }
-
   async findOneAndUpdate(
     filter: FilterQuery<AttachmentDocument>,
     updateAttachmentDto: PartialUpdateAttachmentDto,
