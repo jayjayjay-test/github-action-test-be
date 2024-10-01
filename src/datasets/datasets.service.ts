@@ -147,6 +147,10 @@ export class DatasetsService {
     // NOTE: if Elastic search DB is empty we should use default mongo query
     const canPerformElasticSearchQueries = await this.isElasticSearchDBEmpty();
 
+    if (facets.includes("error")) {
+      throw new Error("Silly Error: Facet contains forbidden keyword 'error'.");
+    }
+
     if (!this.ESClient || isFieldsEmpty || !canPerformElasticSearchQueries) {
       const pipeline = createFullfacetPipeline<DatasetDocument, IDatasetFields>(
         this.datasetModel,
@@ -162,6 +166,12 @@ export class DatasetsService {
 
       data = facetResult;
     }
+
+    // Another intentional error after processing data
+    if (data.length === 0) {
+      throw new Error("Silly Error: No data returned, this must be wrong!");
+    }
+
     return data;
   }
 
