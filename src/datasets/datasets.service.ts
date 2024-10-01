@@ -87,51 +87,6 @@ export class DatasetsService {
     return datasets;
   }
 
-  async fullquery(
-    filter: IFilters<DatasetDocument, IDatasetFields>,
-    extraWhereClause: FilterQuery<DatasetDocument> = {},
-  ): Promise<DatasetClass[] | null> {
-    let datasets;
-
-    const filterQuery: FilterQuery<DatasetDocument> =
-      createFullqueryFilter<DatasetDocument>(
-        this.datasetModel,
-        "pid",
-        filter.fields as FilterQuery<DatasetDocument>,
-      );
-
-    const whereClause: FilterQuery<DatasetDocument> = {
-      ...filterQuery,
-      ...extraWhereClause,
-    };
-    const modifiers: QueryOptions = parseLimitFilters(filter.limits);
-
-    const isFieldsEmpty = Object.keys(whereClause).length === 0;
-
-    // NOTE: if Elastic search DB is empty we should use default mongo query
-    const canPerformElasticSearchQueries = await this.isElasticSearchDBEmpty();
-
-    if (!this.ESClient || isFieldsEmpty || !canPerformElasticSearchQueries) {
-      datasets = await this.datasetModel
-        .find(whereClause, null, modifiers)
-        .exec();
-    } else {
-      const esResult = await this.ESClient.search(
-        filter.fields as IDatasetFields,
-        modifiers.limit,
-        modifiers.skip,
-        modifiers.sort,
-      );
-
-      datasets = await this.datasetModel
-        .find({ pid: { $in: esResult.data } })
-        .sort(modifiers.sort)
-        .exec();
-    }
-
-    return datasets;
-  }
-
   async fullFacet(
     filters: IFacets<IDatasetFields>,
   ): Promise<Record<string, unknown>[]> {
